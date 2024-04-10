@@ -100,7 +100,6 @@ for T in range(1,k+1):
                 mx_gun = g_arr[lni][lnj][-1]  # 맨뒤에것이 가장큰것
                 p_list[loser_idx].get_gun(mx_gun)  # 그냥 줍고
                 g_arr[lni][lnj].pop()           #격자에서 없어짐 처리
-                print()
             # 이긴사람은 바닥의 총들중 제일쎈걸 줍고 들고있던걸 버림
 
             g_arr[ni][nj].sort()
@@ -109,7 +108,6 @@ for T in range(1,k+1):
                 new = g_arr[ni][nj].pop()  # 일단 총을 줍고
                 g_arr[ni][nj].append(p_list[winner_idx].gun_s)  # 내 총을 내려놓고,
                 p_list[winner_idx].get_gun(new)
-                print()
 
         # [3] 만약 움직인 위치에 총이 있다면 판단해서 줍기
         if len(g_arr[ni][nj]) > 0:   # 바닥에 총이 있다면,
