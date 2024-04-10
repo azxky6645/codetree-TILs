@@ -40,7 +40,7 @@ class People():
         self.have_gun = False
 
 for idx in range(1,m+1):
-    i, j, d, s = map(int, input().split()) #0,0격자로 반영해야하니까
+    i, j, d, s = map(int, input().split())
     p = People(idx, s, 0, i, j, d)
     p_list.append(p)
     h_arr[i][j] = idx
@@ -61,7 +61,7 @@ for T in range(1,k+1):
 
         p_list[idx].i, p_list[idx].j = ni, nj   #사람 좌표도 바꿔주고
         h_arr[ni][nj] += idx                     #사람맵에서 격자이동도 해주고
-        h_arr[si][sj] -= idx                    # 빼주고
+        h_arr[si][sj] = 0                    # 빼주고
 
         #[2] 만약 이동한 방향에 사람이 있다면 싸우기
         if h_arr[ni][nj] != idx:
@@ -79,9 +79,10 @@ for T in range(1,k+1):
             p_list[winner_idx].point += abs(p_list[winner_idx].total_s - p_list[loser_idx].total_s)
 
             # 진사람은 총을 버리고 떠남
-            losers_gun = p_list[loser_idx].gun_s       #총을 집고
-            p_list[loser_idx].drop_gun()                #내려놓고
-            g_arr[ni][nj].append(losers_gun)            # 격자에 총 추가
+            if p_list[loser_idx].have_gun:          #총이 있는사람만
+                losers_gun = p_list[loser_idx].gun_s       #총을 집고
+                p_list[loser_idx].drop_gun()                #내려놓고
+                g_arr[ni][nj].append(losers_gun)            # 격자에 총 추가
 
             for dr in range(4):
                 rotate_d = (p_list[loser_idx].d+dr) % 4
@@ -95,34 +96,36 @@ for T in range(1,k+1):
             h_arr[ni][nj] -= loser_idx
             p_list[loser_idx].i, p_list[loser_idx].j = lni, lnj
 
-            if len(g_arr[lni][lnj]) > 0:  # 바닥에 총이 있다면,
+            if sum(g_arr[lni][lnj]) > 0:  # 바닥에 총이 있다면,
                 g_arr[lni][lnj].sort()  # 바닥의 총을 정렬(오름차순)
                 mx_gun = g_arr[lni][lnj][-1]  # 맨뒤에것이 가장큰것
                 p_list[loser_idx].get_gun(mx_gun)  # 그냥 줍고
                 g_arr[lni][lnj].pop()           #격자에서 없어짐 처리
+
             # 이긴사람은 바닥의 총들중 제일쎈걸 줍고 들고있던걸 버림
-
-            g_arr[ni][nj].sort()
-            mx_gun = g_arr[ni][nj][-1]
-            if mx_gun > p_list[winner_idx].gun_s:  # 바닥 중 제일 큰게 내총보다 크면 바꾸기
-                new = g_arr[ni][nj].pop()  # 일단 총을 줍고
-                g_arr[ni][nj].append(p_list[winner_idx].gun_s)  # 내 총을 내려놓고,
-                p_list[winner_idx].get_gun(new)
-
+            if sum(g_arr[ni][nj]) > 0:
+                g_arr[ni][nj].sort()
+                mx_gun = g_arr[ni][nj][-1]
+                if mx_gun > p_list[winner_idx].gun_s:  # 바닥 중 제일 큰게 내총보다 크면 바꾸기
+                    new = g_arr[ni][nj].pop()  # 일단 총을 줍고
+                    g_arr[ni][nj].append(p_list[winner_idx].gun_s)  # 내 총을 내려놓고,
+                    p_list[winner_idx].get_gun(new)
+                    print()
+        else:
         # [3] 만약 움직인 위치에 총이 있다면 판단해서 줍기
-        if len(g_arr[ni][nj]) > 0:   # 바닥에 총이 있다면,
-            g_arr[ni][nj].sort()      #바닥의 총을 정렬(오름차순)
-            mx_gun = g_arr[ni][nj][-1]    # 맨뒤에것이 가장큰것
+            if sum(g_arr[ni][nj]) > 0:   # 바닥에 총이 있다면,
+                g_arr[ni][nj].sort()      #바닥의 총을 정렬(오름차순)
+                mx_gun = g_arr[ni][nj][-1]    # 맨뒤에것이 가장큰것
 
-            if not p_list[idx].have_gun:  # 총을 안갖고있으면 바로줍기
-                p_list[idx].get_gun(mx_gun) #그냥 줍고
-                g_arr[ni][nj].pop()         # 맨뒤에거 없애기
+                if not p_list[idx].have_gun:  # 총을 안갖고있으면 바로줍기
+                    p_list[idx].get_gun(mx_gun) #그냥 줍고
+                    g_arr[ni][nj].pop()         # 맨뒤에거 없애기
 
-            else:   #갖고있으면
-                if mx_gun > p_list[idx].gun_s:  #바닥 중 제일 큰게 내총보다 크면 바꾸기
-                    new = g_arr[ni][nj].pop()       #일단 총을 줍고
-                    g_arr[ni][nj].append(p_list[idx].gun_s)   #내 총을 내려놓고,
-                    p_list[idx].get_gun(new)           #바닥의 총을 내껄로 만들기
+                else:   #갖고있으면
+                    if mx_gun > p_list[idx].gun_s:  #바닥 중 제일 큰게 내총보다 크면 바꾸기
+                        new = g_arr[ni][nj].pop()       #일단 총을 줍고
+                        g_arr[ni][nj].append(p_list[idx].gun_s)   #내 총을 내려놓고,
+                        p_list[idx].get_gun(new)           #바닥의 총을 내껄로 만들기
 
 
 for i in range(1,m+1):
