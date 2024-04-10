@@ -12,15 +12,16 @@ dj = [0,1,0,-1]
 
 ci, cj = int(n/2)+1, int(n/2)+1
 cd = 0          # 첫번째 방향은 항상 위
-
+visited[ci][cj] = 1
 arr[ci][cj][0] = 1  #술래 위치 초기화
+ # 1은 우좌, 2는 하상
+direct = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
-direct = [[], (0, 1), (1, 0)] # 1은 우좌, 2는 하상
 run = {}    # 행, 열, 우좌/하상 방향, 생존여부
 ans = 0     #정답
 for idx in range(1,m+1):    # 도망자 입력받기
     i, j, d = map(int, input().split())
-    run[idx] = [i, j, d, True]    # 행, 열, 우좌/하상 방향, 생존True, 죽음False
+    run[idx] = [i, j, d-1, True]    # 행, 열, 우좌/하상 방향, 생존True, 죽음False
     arr[i][j][2] = [idx]    #각 위치의 도망자 초기화
 
 for idx in range(h):        #나무 입력 받기 좌표 상관없으니 0부터
@@ -36,11 +37,11 @@ def chaser_move(ci, cj, cd, t, visited,di,dj): #좌표, 방향, 현재 턴
         if visited[nci+di[ncd]][ncj+dj[ncd]] == 1:
             ncd = cd
             if visited[nci+di[ncd]][ncj+dj[ncd]] == -1:
-                ncd = (cd + 2) % 4
                 di = di[::-1]
                 dj = dj[::-1]
-                for i in range(n):
-                    for j in range(n):
+                ncd = (cd + 1) % 4
+                for i in range(1,n+1):
+                    for j in range(1,n+1):
                         visited[i][j] = 0
 
     visited[nci][ncj] = 1
@@ -62,7 +63,7 @@ for t in range(1, k+1):
                 nj = sj + direct[sd][1]
                 # 다음 위치가 격자 밖이라면
                 if arr[ni][nj] == -1:
-                    nd = sd * -1        #방향을 반대로 틀어줌
+                    nd = (sd + 2) % 4        #방향을 반대로 틀어줌
                     ni = si + direct[nd][0]
                     nj = sj + direct[nd][1]
                     # 그런데 그 위치에 술래가있으면, 가만히있자
@@ -97,7 +98,7 @@ for t in range(1, k+1):
     # 방향 우
     elif cd == 1:
         for col in range(3):
-            if ci + col < n+1:
+            if cj + col < n+1:
                 sight.add((ci,cj+col))
     # 방향 하
     elif cd == 2:
@@ -107,7 +108,7 @@ for t in range(1, k+1):
     # 방향 좌
     elif cd == 3:
         for col in range(3):
-            if ci - col > 0:
+            if cj - col > 0:
                 sight.add((ci,cj-col))
 
     # 술래의 시야 안의 격자에서
