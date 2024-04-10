@@ -110,7 +110,7 @@ for T in range(1,k+1):
                     new = g_arr[ni][nj].pop()  # 일단 총을 줍고
                     g_arr[ni][nj].append(p_list[winner_idx].gun_s)  # 내 총을 내려놓고,
                     p_list[winner_idx].get_gun(new)
-                    print()
+
         else:
         # [3] 만약 움직인 위치에 총이 있다면 판단해서 줍기
             if sum(g_arr[ni][nj]) > 0:   # 바닥에 총이 있다면,
