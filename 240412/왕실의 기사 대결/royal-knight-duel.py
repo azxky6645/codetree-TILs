@@ -92,11 +92,11 @@ for t in range(1,Q+1):
                         cur_hp[idx] -= 1
             # 점수 다깎고나서, 체력이 0이하되면 제거
             if cur_hp[idx] <= 0:
-                knights.pop(idx)
                 for i in range(1,L+1):
                     for j in range(1, L+1):
                         if k_arr[i][j] == idx:
                             k_arr[i][j] = 0
+    print()
 
 ans = 0
 
