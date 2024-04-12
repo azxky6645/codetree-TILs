@@ -96,7 +96,6 @@ for t in range(1,Q+1):
                     for j in range(1, L+1):
                         if k_arr[i][j] == idx:
                             k_arr[i][j] = 0
-    print()
 
 ans = 0
 
