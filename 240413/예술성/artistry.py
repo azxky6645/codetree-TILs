@@ -2,6 +2,7 @@ from collections import deque
 n = int(input())
 
 arr = [list(map(int, input().split())) for i in range(n)]
+t_arr = [[0] * n for i in range(n)]
 
 di = [-1,1,0,0]
 dj = [0,0,1,-1]
@@ -59,7 +60,7 @@ for t in range(4):  # 전체 게임은 3회인데,
     group = {}  # 인덱스: (해당그룹을 이루는 숫자, 칸 개수, (내부의 아무좌표))
     visited = [[0] * n for i in range(n)]  # bfs 돌때마다 방문처리용
     idx = 0 # 그룹핑에 필요한 그룹인덱스
-    t_arr = [[0] * n for i in range(n)]    # 그룹화된 배열
+        # 그룹화된 배열
     for i in range(n):
         for j in range(n):
             if visited[i][j] == 0:
@@ -67,7 +68,6 @@ for t in range(4):  # 전체 게임은 3회인데,
                 grouping(i,j,idx)
 
     # 각 그룹별 조화 점수의 합산 계산
-    visited = [[0] * n for i in range(n)]
     harmony = 0
     for a in range(1,idx):
         for b in range(a+1,idx+1):
@@ -82,7 +82,6 @@ for t in range(4):  # 전체 게임은 3회인데,
 
     # [2]부위별 회전
     m = n//2                  # 중앙 행,열 좌표
-    temp_arr = [[0]*n for i in range(n)]   #회전 배열 저장좌표
 
     for i in range(m):
         for j in range(m):
